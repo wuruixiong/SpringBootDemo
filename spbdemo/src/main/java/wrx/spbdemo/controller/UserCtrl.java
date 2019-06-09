@@ -1,12 +1,11 @@
 package wrx.spbdemo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import wrx.spbdemo.User;
 import wrx.spbdemo.mapper.UserMapper;
-import wrx.spbdemo.model.User;
 
 import java.util.List;
 
@@ -25,19 +24,69 @@ public class UserCtrl {
     @RequestMapping("selectAll")
     public List<User> selectAll() {
         List<User> users = userMapper.selectAllUser();
-
-        System.out.print("");
-        System.out.print("");
-        System.out.print("");
-
-        //return "add one success";
         return users;
+    }
+
+    @RequestMapping("selectUserByUid")
+    public List<User> selectUserByUid() {
+        List<User> users = userMapper.selectUserByUid(1);
+        return users;
+    }
+
+    @RequestMapping("selectUserByName")
+    public List<User> selectOneByName() {
+        List<User> users = userMapper.selectUserByName("white");
+        return users;
+    }
+
+    @RequestMapping("addOne")
+    public String addOne() {
+        userMapper.addOne(new User("white", "wpsd", "98766@10.com"));
+        return "add success";
+    }
+
+    @RequestMapping("updateOne")
+    public String updateOne() {
+        User userNew = new User(5, "white", "wpsd", "657@34.com");
+        List<User> users = userMapper.selectUserByUid(userNew.getUid());
+        if (users.size() == 1) {
+            if (users.get(0).getUid().equals(userNew.getUid())&&
+            users.get(0).getPassword().equals(userNew.getPassword())) {
+                userMapper.updateName(userNew);
+                return "update success";
+            }
+        }
+        return  "update fail";
+    }
+
+    @RequestMapping("deleteOne")
+    public String deleteOne() {
+        //userMapper.deleteOne(new User(3,"white", "wpsd", "98766@10.com"));
+        User user = new User();
+        user.setUid(4);
+        user.setName("white");
+        user.setPassword("wpsd");
+        userMapper.deleteOne(user);
+        return "delete success";
     }
 
 
 
+    @GetMapping("/login")
+    public ModelAndView loginGet(Model model) {
+        model.addAttribute("user", new User());
+        return new ModelAndView("login");
+    }
 
 
+    @PostMapping("/login")
+    public ModelAndView loginPost(@ModelAttribute User user) {
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("name", user.getName());
+        return modelAndView;
+    }
 
 
 }
+
+

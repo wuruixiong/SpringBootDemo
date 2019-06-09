@@ -1,4 +1,4 @@
-package wrx.spbdemo.model;
+package wrx.spbdemo;
 
 public class User {
 
@@ -20,6 +20,7 @@ public class User {
     }
 
     public User(Integer id, String name, String password, String email) {
+        setUid(id);
         setName(name);
         setPassword(password);
         setEmail(email);

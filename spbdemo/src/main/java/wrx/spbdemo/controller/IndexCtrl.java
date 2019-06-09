@@ -20,6 +20,14 @@ public class IndexCtrl {
         return modelAndView;
     }
 
+    @RequestMapping(value = "FrontEndTest", method = RequestMethod.GET)
+    public ModelAndView frontEndTest() {
+        ModelAndView modelAndView = new ModelAndView("front_end_test");
+        return modelAndView;
+    }
+
+
+
 
 
 
