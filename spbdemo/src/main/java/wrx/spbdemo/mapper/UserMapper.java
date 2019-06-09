@@ -14,6 +14,9 @@ public interface UserMapper {
     @Select("select name, email from user")
     List<User> selectAllUser();
 
+    @Select("select * from user where name = #{name} and password = #{password}")
+    List<User> selectUserByNamePwd(User user);
+
     @Select("select * from user where uid = #{uid}")
     List<User> selectUserByUid(Integer uid);
 

@@ -78,13 +78,29 @@ public class UserCtrl {
         return new ModelAndView("login");
     }
 
-
     @PostMapping("/login")
     public ModelAndView loginPost(@ModelAttribute User user) {
-        ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("name", user.getName());
-        return modelAndView;
+        List<User> users = userMapper.selectUserByNamePwd(user);
+        ModelAndView modelAndView = new ModelAndView();
+        if (users.size() == 1) {
+            modelAndView.setViewName("userIndex");
+            modelAndView.addObject("name", user.getName());
+            return modelAndView;
+        } else if (users.size() > 1) {
+            System.out.print("user login error, more then one user.");
+            modelAndView.setViewName("error");
+            return modelAndView;
+        } else {
+            modelAndView.setViewName("error");
+            return modelAndView;
+        }
     }
+
+
+    /*@PostMapping("/login")
+    public ModelAndView loginPost(@ModelAttribute User user) {
+
+    }*/
 
 
 }
