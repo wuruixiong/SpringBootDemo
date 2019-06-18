@@ -70,8 +70,6 @@ public class UserCtrl {
         return "delete success";
     }
 
-
-
     @GetMapping("/login")
     public ModelAndView loginGet(Model model) {
         model.addAttribute("user", new User());
@@ -96,11 +94,22 @@ public class UserCtrl {
         }
     }
 
+    @GetMapping("/signin")
+    public ModelAndView signInGet(Model model) {
+        model.addAttribute("user", new User());
+        return new ModelAndView("sign_in");
+    }
 
-    /*@PostMapping("/login")
-    public ModelAndView loginPost(@ModelAttribute User user) {
+    @PostMapping("/signin")
+    public ModelAndView signInPost(@ModelAttribute User user) {
+        userMapper.addOne(user);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("userIndex");
+        modelAndView.addObject("name", user.getName());
+        return modelAndView;
+    }
 
-    }*/
+
 
 
 }
