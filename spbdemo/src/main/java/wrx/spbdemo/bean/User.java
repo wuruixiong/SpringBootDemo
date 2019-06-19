@@ -1,4 +1,4 @@
-package wrx.spbdemo;
+package wrx.spbdemo.bean;
 
 public class User {
 

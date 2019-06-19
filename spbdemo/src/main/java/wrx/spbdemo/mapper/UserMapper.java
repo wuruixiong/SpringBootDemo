@@ -1,7 +1,7 @@
 package wrx.spbdemo.mapper;
 
 import org.apache.ibatis.annotations.*;
-import wrx.spbdemo.User;
+import wrx.spbdemo.bean.User;
 
 import java.util.List;
 

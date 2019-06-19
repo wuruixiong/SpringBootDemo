@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import wrx.spbdemo.User;
+import wrx.spbdemo.bean.User;
 import wrx.spbdemo.mapper.UserMapper;
 
 import java.util.List;
