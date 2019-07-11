@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 import wrx.spbdemo.bean.User;
 import wrx.spbdemo.mapper.UserMapper;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
