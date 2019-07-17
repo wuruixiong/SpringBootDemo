@@ -77,6 +77,9 @@ public class IndexCtrl {
             if (cookie.getName().equals("mykey")) {
                 System.out.println("mytest, "+"mykey:"+cookie.getValue());
                 value = cookie.getValue();
+                if (value.length() > 20) {
+                    value = "kk";
+                }
             }
         }
         //每一次add进去的cookie值不同，key相同，所以打印出来的value会越来越长

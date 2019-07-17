@@ -7,54 +7,66 @@ import org.springframework.web.servlet.ModelAndView;
 import wrx.spbdemo.bean.User;
 import wrx.spbdemo.mapper.UserMapper;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import static wrx.spbdemo.bean.Keys.LOGIN_INFO;
 
 @RestController
 @RequestMapping(value = "user")
 public class UserCtrl {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserMapper mUserMapper;
 
     @RequestMapping("index")
     public String hello() {
         return "hello UserCtrl";
     }
 
+    @RequestMapping("/toIndex")
+    public ModelAndView toIndex(HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("userIndex");
+        if (session.getAttribute(LOGIN_INFO) instanceof User) {
+            User user = ((User) session.getAttribute(LOGIN_INFO));
+            modelAndView.addObject("name", user.getName());
+        }
+        return modelAndView;
+    }
+
     @RequestMapping("selectAll")
     public List<User> selectAll() {
-        List<User> users = userMapper.selectAllUser();
+        List<User> users = mUserMapper.selectAllUser();
         return users;
     }
 
     @RequestMapping("selectUserByUid")
     public List<User> selectUserByUid() {
-        List<User> users = userMapper.selectUserByUid(1);
+        List<User> users = mUserMapper.selectUserByUid(1);
         return users;
     }
 
     @RequestMapping("selectUserByName")
     public List<User> selectOneByName() {
-        List<User> users = userMapper.selectUserByName("white");
+        List<User> users = mUserMapper.selectUserByName("white");
         return users;
     }
 
     @RequestMapping("addOne")
     public String addOne() {
-        userMapper.addOne(new User("white", "wpsd", "98766@10.com"));
+        mUserMapper.addOne(new User("white", "wpsd", "98766@10.com"));
         return "add success";
     }
 
     @RequestMapping("updateOne")
     public String updateOne() {
         User userNew = new User(5, "white", "wpsd", "657@34.com");
-        List<User> users = userMapper.selectUserByUid(userNew.getUid());
+        List<User> users = mUserMapper.selectUserByUid(userNew.getUid());
         if (users.size() == 1) {
             if (users.get(0).getUid().equals(userNew.getUid())&&
             users.get(0).getPassword().equals(userNew.getPassword())) {
-                userMapper.updateName(userNew);
+                mUserMapper.updateName(userNew);
                 return "update success";
             }
         }
@@ -63,12 +75,12 @@ public class UserCtrl {
 
     @RequestMapping("deleteOne")
     public String deleteOne() {
-        //userMapper.deleteOne(new User(3,"white", "wpsd", "98766@10.com"));
+        //mUserMapper.deleteOne(new User(3,"white", "wpsd", "98766@10.com"));
         User user = new User();
         user.setUid(4);
         user.setName("white");
         user.setPassword("wpsd");
-        userMapper.deleteOne(user);
+        mUserMapper.deleteOne(user);
         return "delete success";
     }
 
@@ -79,12 +91,15 @@ public class UserCtrl {
     }
 
     @PostMapping("/login")
-    public ModelAndView loginPost(@ModelAttribute User user) {
-        List<User> users = userMapper.selectUserByNamePwd(user);
+    public ModelAndView loginPost(@ModelAttribute User user, HttpSession httpSession) {
+        List<User> users = mUserMapper.selectUserByNamePwd(user);
         ModelAndView modelAndView = new ModelAndView();
         if (users.size() == 1) {
             modelAndView.setViewName("userIndex");
             modelAndView.addObject("name", user.getName());
+
+            httpSession.setAttribute(LOGIN_INFO, users.get(0));
+
             return modelAndView;
         } else if (users.size() > 1) {
             System.out.print("user login error, more then one user.");
@@ -104,7 +119,7 @@ public class UserCtrl {
 
     @PostMapping("/signin")
     public ModelAndView signInPost(@ModelAttribute User user) {
-        userMapper.addOne(user);
+        mUserMapper.addOne(user);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("userIndex");
         modelAndView.addObject("name", user.getName());
